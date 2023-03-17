@@ -53,7 +53,6 @@ insert x (Node e l r) = if e < x then
                         else
                           Node e l (insert x r)
 
-
 --Cette fonction prend une valeur de type a et un arbre binaire de recherche de type Tree a
 --et retourne True si la valeur est présente dans l'arbre, ou False sinon.
 search :: Ord a => a -> Tree a -> Bool
@@ -114,9 +113,13 @@ map :: (a -> b) -> Tree a -> Tree b
 map _ None = None
 map f (Node e l r) = (Node (f e) (map f l) (map f r))
 
--- tfoldl :: (a -> b -> b) -> b -> Tree a -> b
--- tfoldl _ acc None = acc
--- tfold
+-- fold :: (a -> b -> b -> b) -> b -> Tree a -> b
+-- fold _ acc None = acc
+-- fold f acc (Node x l r) = f x (fold f acc l) (fold f acc r)
+
+fold :: (a -> b -> b) -> b -> Tree a -> b
+fold _ acc None = acc
+fold f acc (Node x l r) = fold f (f x (fold f acc l)) r
 
 toList :: Tree a -> [a]
 toList = inOrder
@@ -138,12 +141,14 @@ isBalanced :: Tree a -> Bool
 isBalanced None = True
 isBalanced (Node _ l r) = (abs (height l - height r)) <= 1
 
+-- flatten :: Tree a -> [a]
+-- flatten = fold ()
 
 --Cette fonction prend deux arbres binaires de recherche en entrée
 --et renvoie un nouvel arbre qui contient toutes les valeurs de ces deux arbres.
--- merge :: Ord a => Tree a -> Tree a -> Tree a
--- merge tree1 None = tree1
--- merge tree1 tree2@(Node e _ _) = merge (insert e tree1) (delete e tree2)
+merge :: Ord a => Tree a -> Tree a -> Tree a
+merge tree1 None = tree1
+merge tree1 (Node e l r) = (Node 1 (merge l ))
 
 -- split :: Ord a => a -> Tree a -> (Tree a, Tree a)
 
